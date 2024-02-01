@@ -6,6 +6,9 @@ public class PlayerMovement : MonoBehaviour
 {
     public float turnSpeed = 20;
     public float moveSpeed = 10f;
+    public float JumpForce = 10f;
+    public float GravityModifier = 1f;
+    public bool IsOnGround = true;
     private Vector3 _movement;
     //private Animator _mAnimator;
     private Rigidbody _rigidbody;
@@ -16,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //_mAnimator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
+        Physics.gravity = GravityModifier; 
     }
 
     // Update is called once per frame
@@ -38,5 +42,14 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody.MovePosition (_rigidbody.position + _movement * moveSpeed * Time.deltaTime);
         _rigidbody.MoveRotation (_rotation);
     }
+    
+        private void OnCollisionEnter(Collision collision)
+        {
+            if(Input.GetKeyDown(KeyCode.Space) && IsOnGround)
+            {
+                _rigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+                IsOnGround = false;
+            }
+        }
        
 }
