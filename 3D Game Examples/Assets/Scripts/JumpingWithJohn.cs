@@ -2,27 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
-{
-    public float turnSpeed = 20;
+public class jumpingwithjohn : MonoBehaviour
+{   public float turnSpeed = 20;
     public float moveSpeed = 10f;
     public float JumpForce = 10f;
     public float GravityModifier = 1f;
-    public bool IsOnGround = true;
     private Vector3 _movement;
-    //private Animator _mAnimator;
+    private Animator _mAnimator;
     private Rigidbody _rigidbody;
+    public bool IsOnGround = true;
     Quaternion _rotation = Quaternion.identity;
 
     // Start is called before the first frame update
     void Start()
     {
-        //_mAnimator = GetComponent<Animator>();
+        _mAnimator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
-        Physics.gravity *= GravityModifier; 
+        Physics.gravity *= GravityModifier;
     }
 
     // Update is called once per frame
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space) && IsOnGround)
+        {
+            _rigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+            IsOnGround = false;
+        }
+    }
+
     void FixedUpdate()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -41,15 +49,15 @@ public class PlayerMovement : MonoBehaviour
 
         _rigidbody.MovePosition (_rigidbody.position + _movement * moveSpeed * Time.deltaTime);
         _rigidbody.MoveRotation (_rotation);
+
     }
-    
-        private void OnCollisionEnter(Collision collision)
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            if(Input.GetKeyDown(KeyCode.Space) && IsOnGround)
-            {
-                _rigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
-                IsOnGround = false;
-            }
+            IsOnGround = true;
         }
-       
+    }
+
 }
