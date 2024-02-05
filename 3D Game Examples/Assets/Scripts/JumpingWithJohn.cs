@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class jumpingwithjohn : MonoBehaviour
 {   public float turnSpeed = 20;
@@ -11,14 +12,18 @@ public class jumpingwithjohn : MonoBehaviour
     private Animator _mAnimator;
     private Rigidbody _rigidbody;
     public bool IsOnGround = true;
-    Quaternion _rotation = Quaternion.identity;
+    private Quaternion _rotation = Quaternion.identity;
+    //private Vector3 _defaultGravity = new Vector3(0f, -9.81f, 0f);
 
     // Start is called before the first frame update
     void Start()
     {
+
         _mAnimator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
         Physics.gravity *= GravityModifier;
+        //Physics.gravity = _defaultGravity;
+        //Debug.Log(Physics.gravity);
     }
 
     // Update is called once per frame
