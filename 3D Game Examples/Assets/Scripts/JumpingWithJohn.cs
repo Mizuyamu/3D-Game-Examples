@@ -1,28 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
 public class jumpingwithjohn : MonoBehaviour
-{   public float turnSpeed = 20;
-    public float moveSpeed = 10f;
+{   
+    public float turnSpeed = 20;
+    public float moveSpeed = 1f;
     public float JumpForce = 10f;
     public float GravityModifier = 1f;
-    private Vector3 _movement;
-    private Animator _mAnimator;
-    private Rigidbody _rigidbody;
+    public float outOfBounds = -10f;
     public bool IsOnGround = true;
+    public Transform checkPointAreaObject;
+    public bool isAtCheckpoint;
+    public GameObject 
+    private Vector3 _movement;
+    //private Animator _animator; 
     private Quaternion _rotation = Quaternion.identity;
-    //private Vector3 _defaultGravity = new Vector3(0f, -9.81f, 0f);
+    private Vector3 _defaultGravity = new Vector3(0f, -9.81f, 0f);
+    private Vector3 _startingPosition;
 
     // Start is called before the first frame update
     void Start()
     {
-
-        _mAnimator = GetComponent<Animator>();
+        //_animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
-        Physics.gravity *= GravityModifier;
         //Physics.gravity = _defaultGravity;
+        Physics.gravity *= GravityModifier;
+        Debug.Log(Physics.gravity);
         //Debug.Log(Physics.gravity);
     }
 
@@ -33,6 +37,11 @@ public class jumpingwithjohn : MonoBehaviour
         {
             _rigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
             IsOnGround = false;
+        }
+
+        if(transform.position.y < outOfBounds)
+        {
+            transform.position = _startingPostion;
         }
     }
 
@@ -64,5 +73,14 @@ public class jumpingwithjohn : MonoBehaviour
             IsOnGround = true;
         }
     }
-
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject == checkPointAreaObject)
+        {
+            isAtCheckpoint = true;
+            //Debug.Log(_startingPosition);
+            _startingPosition = checkPointAreaObject.transform.position;
+            //Debug.Log(_startingPosition);
+        }
+    }
 }

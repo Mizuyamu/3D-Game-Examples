@@ -15,6 +15,6 @@ public class Spinner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         transform.Rotate(Vector3.forward, RotationSpeed * _horizontalInput * Time.deltaTime);
+         transform.Rotate(new Vector3(45, 0, 0) * Time.deltaTime);
     }
 }
