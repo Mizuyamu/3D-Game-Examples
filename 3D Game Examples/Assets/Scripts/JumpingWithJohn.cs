@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 public class jumpingwithjohn : MonoBehaviour
 {   
@@ -10,14 +9,16 @@ public class jumpingwithjohn : MonoBehaviour
     public float GravityModifier = 1f;
     public float outOfBounds = -10f;
     public bool IsOnGround = true;
-    public Transform checkPointAreaObject;
     public bool isAtCheckpoint;
-    public GameObject 
+    public GameObject checkPointAreaObject;
+    public GameObject finishAreaObject;
     private Vector3 _movement;
-    //private Animator _animator; 
+    //private Animator _animator;
+    private Rigidbody _rigidbody;  
     private Quaternion _rotation = Quaternion.identity;
     private Vector3 _defaultGravity = new Vector3(0f, -9.81f, 0f);
     private Vector3 _startingPosition;
+    private Vector3 _checkpointPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +42,14 @@ public class jumpingwithjohn : MonoBehaviour
 
         if(transform.position.y < outOfBounds)
         {
-            transform.position = _startingPostion;
+            if(isAtCheckpoint)
+            {
+                transform.position = _checkpointPosition;
+            }
+            else
+            {
+                transform.position = _startingPosition;
+            }
         }
     }
 
@@ -79,8 +87,14 @@ public class jumpingwithjohn : MonoBehaviour
         {
             isAtCheckpoint = true;
             //Debug.Log(_startingPosition);
-            _startingPosition = checkPointAreaObject.transform.position;
+            _checkpointPosition = checkPointAreaObject.transform.position;
             //Debug.Log(_startingPosition);
+        }
+
+        if(other.gameObject == finishAreaObject)
+        {
+            isAtCheckpoint = false; 
+            transform.position = _startingPosition;
         }
     }
 }
