@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Spinner
+  - Collectible-Return
   layers:
   - Default
   - TransparentFX

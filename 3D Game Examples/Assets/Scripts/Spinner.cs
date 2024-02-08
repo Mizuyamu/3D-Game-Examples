@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spinner : MonoBehaviour
 {
-    public float RotationSpeed = 45f;
+    public float rotationSpeed = 10f;
     private float _horizontalInput;
     // Start is called before the first frame update
     void Start()
@@ -15,6 +15,8 @@ public class Spinner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         transform.Rotate(new Vector3(45, 0, 0) * Time.deltaTime);
+         transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
     }
+
+    
 }
