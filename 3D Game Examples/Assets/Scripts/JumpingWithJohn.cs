@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class jumpingwithjohn : MonoBehaviour
-{   
+
+public class JumpingWithJohn : MonoBehaviour
+{
     public int score = 0;
     public float turnSpeed = 20;
     public float moveSpeed = 1f;
@@ -10,29 +11,31 @@ public class jumpingwithjohn : MonoBehaviour
     public float GravityModifier = 1f;
     public float outOfBounds = -10f;
     public bool IsOnGround = true;
-    public bool isAtCheckpoint;
-    public GameObject checkPointAreaObject;
+    public bool isAtCheckpoint = false;
+    public GameObject checkpointAreaObject;
     public GameObject finishAreaObject;
     private Vector3 _movement;
     //private Animator _animator;
-    private Rigidbody _rigidbody;  
+    private Rigidbody _rigidbody;
     private Quaternion _rotation = Quaternion.identity;
     private Vector3 _defaultGravity = new Vector3(0f, -9.81f, 0f);
-    private Vector3 _startingPosition;
+    private Vector3 _startingPostion;
     private Vector3 _checkpointPosition;
+    private GameObject[] _collectibles;
 
     // Start is called before the first frame update
     void Start()
     {
         //_animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
-        //Physics.gravity = _defaultGravity;
-        Physics.gravity *= GravityModifier;
-        Debug.Log(Physics.gravity);
+        Physics.gravity = _defaultGravity;
         //Debug.Log(Physics.gravity);
+        Physics.gravity *= GravityModifier;
+        //Debug.Log(Physics.gravity);
+        _startingPostion = transform.position;
+        _collectibles = GameObject.FindGameObjectsWithTag("Collectible-Return");
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space) && IsOnGround)
@@ -45,15 +48,19 @@ public class jumpingwithjohn : MonoBehaviour
         {
             if(isAtCheckpoint)
             {
+                ReturningCollectibles();
                 transform.position = _checkpointPosition;
             }
             else
             {
-                transform.position = _startingPosition;
+                ReturningCollectibles();
+                transform.position = _startingPostion;
             }
+            
         }
     }
 
+    // Update is called once per frame
     void FixedUpdate()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -65,15 +72,21 @@ public class jumpingwithjohn : MonoBehaviour
         bool hasHorizontalInput = !Mathf.Approximately (horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately (vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;
-        //m_Animator.SetBool ("IsWalking", isWalking);
+        //_animator.SetBool ("IsWalking", isWalking);
 
         Vector3 desiredForward = Vector3.RotateTowards (transform.forward, _movement, turnSpeed * Time.deltaTime, 0f);
         _rotation = Quaternion.LookRotation (desiredForward);
 
         _rigidbody.MovePosition (_rigidbody.position + _movement * moveSpeed * Time.deltaTime);
         _rigidbody.MoveRotation (_rotation);
-
+    
     }
+
+    //void OnAnimatorMove ()
+    //{
+    //    _rigidbody.MovePosition (_rigidbody.position + _movement * m_Animator.deltaPosition.magnitude);
+    //    _rigidbody.MoveRotation (_rotation);
+    //}
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -86,33 +99,52 @@ public class jumpingwithjohn : MonoBehaviour
         {
             if(isAtCheckpoint)
             {
-                transform.position = checkPointAreaObject.transform.position;
+                ReturningCollectibles();
+                transform.position = checkpointAreaObject.transform.position;
+                
             }
             else
             {
-                transform.position = _startingPosition;
+                ReturningCollectibles();
+                transform.position = _startingPostion;
             }
         }
+        
     }
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject == checkPointAreaObject)
+        if(other.gameObject == checkpointAreaObject)
         {
             isAtCheckpoint = true;
-            //Debug.Log(_startingPosition);
-            _checkpointPosition = checkPointAreaObject.transform.position;
-            //Debug.Log(_startingPosition);
+            _checkpointPosition = checkpointAreaObject.transform.position;
         }
 
         if(other.gameObject == finishAreaObject)
         {
-            isAtCheckpoint = false; 
-            transform.position = _startingPosition;
+            isAtCheckpoint = false;
+            ReturningCollectibles();
+            transform.position = _startingPostion;
+        }
+
+        if(other.gameObject.CompareTag("Collectible-Destroy"))
+        {
+            score++;
+            Destroy(other.gameObject);
         }
 
         if(other.gameObject.CompareTag("Collectible-Return"))
         {
-            other.gameObject.SetActive(false);
+            score++;
+            other.gameObject.GetComponent<Collectibles>().HideCollectibles();
+        }
+    }
+
+    void ReturningCollectibles()
+    {
+        for(int i = 0; i < _collectibles.Length; i++)
+        {
+            _collectibles[i].SetActive(true);
+            _collectibles[i].GetComponent<Collectibles>().ReturnCollectibles();
         }
     }
 }
