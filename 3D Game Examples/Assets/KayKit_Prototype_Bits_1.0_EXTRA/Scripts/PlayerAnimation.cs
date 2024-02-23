@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    private PlayerMovement _characterMovement;
+    private Player _characterMovement;
     private Animator _characterAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
         _characterAnimator = GetComponent<Animator>();
-        _characterMovement = GameObject.Find("Player").GetComponent<PlayerMovement>();
+        _characterMovement = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
