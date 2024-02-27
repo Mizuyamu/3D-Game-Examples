@@ -43,4 +43,16 @@ public class Timer : MonoBehaviour
 
         timeText.text = string.Format("{0;00}:{1:00}", minutes, seconds);
     }
+    if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                DisplayTime(timeRemaining);
+            }
+            else
+            {
+                Debug.Log("Time has run out!");
+                GameObject.Find("Game Session").GetComponent<GameSession>().FadeInUI();
+                timeRemaining = 0;
+                timerIsRunning = false;
+            }
 }
