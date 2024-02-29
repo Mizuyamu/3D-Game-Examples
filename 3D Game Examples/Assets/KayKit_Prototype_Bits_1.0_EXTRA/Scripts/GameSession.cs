@@ -15,7 +15,7 @@ public class GameSession : MonoBehaviour
     {
         _coinCount = 0;
         _countCountText.text = "Coins: " + _coinCount.ToString();
-        FadeOutUI();
+        fadeOutUI();
     }
 
     // Update is called once per frame
@@ -35,10 +35,19 @@ public class GameSession : MonoBehaviour
 
         if(_fadeOut)
         {
-            if(_canvaGroup.alpha >= 0)
+            if(_CanvasGroup.alpha >= 0)
             {
-                _canvaGroup.alpha -= Time.deltaTime;
+                _CanvasGroup.alpha -= Time.deltaTime;
+                if(_CanvasGroup.alpha ==0)
+                {
+                    _fadeOut = false;
+                }
             }
         }
     }
-}
+
+    public void fadeOutUI()
+    {
+        _fadeOut = true;
+    }
+}   

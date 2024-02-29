@@ -6,13 +6,13 @@ using TMPro;
 public class Timer : MonoBehaviour
 {
     public float timeRemaining = 10;
-    public bool timerIsrunning = false;
+    public bool timerIsRunning = false;
     public TextMeshProUGUI timeText;
    
     private void Start()
     {
         // Starts the timer automatically
-        timerIsrunning = true;
+        timerIsRunning = true;
     }
 
     // Update is called once per frame
