@@ -1,4 +1,4 @@
-using System.Collections;
+         using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -46,6 +46,10 @@ public class GameSession : MonoBehaviour
         }
     }
 
+    public void FadeInUI()
+    {
+        _fadeIn = true;
+    }
     public void fadeOutUI()
     {
         _fadeOut = true;
